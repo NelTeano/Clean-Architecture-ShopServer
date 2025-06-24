@@ -11,8 +11,8 @@ namespace MyServer.Core.Interfaces
     {
         Task<UserEntity> GetUserById(Guid id);
         Task<IEnumerable<UserEntity>> GetAllUsers();
-        Task<UserEntity> AddUser(UserEntity user);
-        Task<UserEntity> UpdateUser(Guid id, UserEntity user);
+        Task<UserEntity> AddUser(UserEntity user, CancellationToken cancellationToken);
+        Task<UserEntity?> UpdateUser(Guid id, UserEntity user);
         Task<UserEntity> DeleteUser(Guid id);
     }
 }

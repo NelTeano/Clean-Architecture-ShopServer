@@ -15,7 +15,7 @@ namespace MyServer.Application.Commands
         }
         public async Task<UserEntity> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            return await _userRepository.AddUser(request.User);
+            return await _userRepository.AddUser(request.User, cancellationToken);
         }
     }
 }

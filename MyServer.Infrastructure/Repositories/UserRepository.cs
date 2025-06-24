@@ -26,28 +26,35 @@ namespace MyServer.Infrastructure.Repositories
             return await dbContext.User.ToListAsync();
         }
 
-        public async Task<UserEntity> AddUser(UserEntity user)
+        public async Task<UserEntity> AddUser(UserEntity user, CancellationToken cancellationToken)
         {
             user.Id = Guid.NewGuid();
             dbContext.User.Add(user);
 
-            await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync(cancellationToken);
             return user;
         }
 
-        public async Task<UserEntity> UpdateUser(Guid id, UserEntity user)
+        public async Task<UserEntity?> UpdateUser(Guid id, UserEntity updatedUser)
         {
-            var User = await dbContext.User.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await dbContext.User.FirstOrDefaultAsync(u => u.Id == id);
 
-            if(User is not null)
+            if (user is null)
             {
-                User.Username = user.Username;
-                User.Email = user.Email;
-
-                await dbContext.SaveChangesAsync();
-                return User;
+                return null; 
             }
 
+            user.Username = updatedUser.Username;
+            user.Email = updatedUser.Email;
+            user.FirstName = updatedUser.FirstName;
+            user.LastName = updatedUser.LastName;
+            user.PhoneNumber = updatedUser.PhoneNumber;
+            user.Role = updatedUser.Role;
+            user.IsActive = updatedUser.IsActive;
+            user.EmailConfirmed = updatedUser.EmailConfirmed;
+            user.LastLogin = updatedUser.LastLogin;
+
+            await dbContext.SaveChangesAsync();
             return user;
         }
 
