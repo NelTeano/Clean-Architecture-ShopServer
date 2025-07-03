@@ -1,14 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyServer.Core.Entities; 
 using MyServer.Application.Commands;
 using MyServer.Application.Queries;
+using MyServer.Core.Entities; 
 
 namespace MyServer.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController(ISender sender) : ControllerBase
     {
         [HttpPost("")]
@@ -32,6 +34,8 @@ namespace MyServer.Api.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+
 
     }
 }
