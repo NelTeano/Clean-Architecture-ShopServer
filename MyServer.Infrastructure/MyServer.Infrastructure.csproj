@@ -18,12 +18,17 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
     <PackageReference Include="Stripe.net" Version="48.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyServer.Application\MyServer.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="External\" />
   </ItemGroup>
 
 </Project>

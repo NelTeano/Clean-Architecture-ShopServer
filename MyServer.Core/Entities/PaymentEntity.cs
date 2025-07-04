@@ -17,6 +17,9 @@ namespace MyServer.Core.Entities
         [MaxLength(100)]
         public string StripePaymentIntentId { get; set; } = string.Empty;
 
+        [MaxLength(100)]
+        public string? StripeSessionId { get; set; }
+
         [Required]
         public decimal Amount { get; set; }
 
