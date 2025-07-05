@@ -29,7 +29,7 @@ namespace MyServer.Infrastructure.Services
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             UnitAmount = (long)(amount * 100), // Convert to cents
-                            Currency = "php", // Fixed: Changed from "usd" to "php"
+                            Currency = "php",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = productName,
@@ -41,6 +41,19 @@ namespace MyServer.Infrastructure.Services
                 Mode = "payment",
                 SuccessUrl = successUrl,
                 CancelUrl = cancelUrl,
+
+                // Add these configurations to ensure webhook events are triggered
+                PaymentIntentData = new SessionPaymentIntentDataOptions
+                {
+                    CaptureMethod = "automatic",
+                    SetupFutureUsage = null // Remove this if you don't want to save payment method
+                },
+
+                // Enable automatic tax calculation (optional)
+                AutomaticTax = new SessionAutomaticTaxOptions
+                {
+                    Enabled = false
+                }
             };
 
             var service = new SessionService();
