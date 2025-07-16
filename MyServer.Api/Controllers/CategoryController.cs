@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyServer.Application.Commands.Category;
 using MyServer.Application.Queries.Category;
 using MyServer.Core.Entities;
+using MyServer.Application.Models.DTOs;
 
 namespace MyServer.Api.Controllers
 {
@@ -44,5 +45,52 @@ namespace MyServer.Api.Controllers
             var result = await sender.Send(new AddCategoryCommand(category), cancellationToken);
             return Ok(result);
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryDTO category, CancellationToken cancellationToken)
+        {
+
+            try
+            {
+                var updatedCategory = await sender.Send(new UpdateCategoryCommand(
+                    id,
+                    category.Name,
+                    category.Description,
+                    category.IsActive
+                ), cancellationToken);
+                return Ok(updatedCategory);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while updating the category.");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await sender.Send(new DeleteCategoryCommand(id), cancellationToken);
+                if (result)
+                {
+                    return NoContent(); // 204 No Content
+                }
+                return NotFound(); // 404 Not Found
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while deleting the category.");
+            }
+        }
     }
+
 }

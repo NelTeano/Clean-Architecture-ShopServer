@@ -77,12 +77,16 @@ namespace MyServer.Infrastructure.Repositories
                     return null; // Category not found
                 }
 
-                existingCategory.Name = updatedCategory.Name;
-                existingCategory.Description = updatedCategory.Description;
+                if (updatedCategory.Name != null)
+                    existingCategory.Name = updatedCategory.Name;
+
+                if (updatedCategory.Description != null)
+                    existingCategory.Description = updatedCategory.Description;
+
                 existingCategory.IsActive = updatedCategory.IsActive;
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
-                return updatedCategory;
+                return existingCategory;
             }
             catch (Exception ex)
             {
