@@ -14,7 +14,12 @@ namespace MyServer.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<CategoryEntity>> GetAllCategories(CancellationToken cancellationToken)
         {
-            // Fix: Update GetAllCategoryQuery to return IEnumerable<CategoryEntity> instead of a single CategoryEntity
+            try { 
+
+            } catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving all categories.", ex);
+            }
             return await sender.Send(new GetAllCategoriesQuery(), cancellationToken);
         }
 

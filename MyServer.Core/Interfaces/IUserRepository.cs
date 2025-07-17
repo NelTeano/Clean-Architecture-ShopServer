@@ -13,6 +13,6 @@ namespace MyServer.Core.Interfaces
         Task<IEnumerable<UserEntity>> GetAllUsers();
         Task<UserEntity> AddUser(UserEntity user, CancellationToken cancellationToken);
         Task<UserEntity?> UpdateUser(Guid id, UserEntity user);
-        Task<UserEntity> DeleteUser(Guid id);
+        Task<UserEntity> DeleteUser(Guid id, CancellationToken cancellationToken);
     }
 }

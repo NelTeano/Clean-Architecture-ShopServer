@@ -2,7 +2,7 @@
 using MyServer.Core.Entities;
 using MyServer.Core.Interfaces;
 
-namespace MyServer.Application.Commands
+namespace MyServer.Application.Commands.User
 {
     public record AddUserCommand(UserEntity User) : IRequest<UserEntity>;
 

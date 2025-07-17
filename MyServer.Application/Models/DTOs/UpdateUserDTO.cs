@@ -5,12 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyServer.Core.Entities
+namespace MyServer.Application.Models.DTOs
 {
-    public class UserEntity
+    public class UpdateUserDTO
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -40,8 +38,5 @@ namespace MyServer.Core.Entities
 
         [MaxLength(100)]
         public string? Role { get; set; }
-
-
     }
 }
-

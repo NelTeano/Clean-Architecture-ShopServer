@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyServer.Application.Queries
+namespace MyServer.Application.Queries.User
 {
 
     public record GetUserByIdQuery(UserEntity User) : IRequest<UserEntity>;

@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using MyServer.Application.Commands;
-using MyServer.Application.Queries;
+using MyServer.Application.Commands.User;
+using MyServer.Application.Commands.User;
+using MyServer.Application.Models.DTOs;
+using MyServer.Application.Queries.User;
+using MyServer.Application.Queries.User;
 using MyServer.Core.Entities; 
 
 namespace MyServer.Api.Controllers
@@ -35,7 +38,62 @@ namespace MyServer.Api.Controllers
             }
         }
 
+        [HttpGet("")]
+        public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var users = await sender.Send(new GetAllUserQuery(), cancellationToken);
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while retrieving all users: " + ex.Message);
+            }
+        }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDTO user)
+        {
+            try
+            {
+                var updatedUser = await sender.Send(new UpdateUserCommand(
+                    id,
+                    user.Username,
+                    user.Email,
+                    user.FirstName,
+                    user.LastName,
+                    user.PhoneNumber,
+                    user.EmailConfirmed,
+                    user.IsActive,
+                    user.CreatedOn,
+                    user.LastLogin,
+                    user.Role
+                ));
+                return Ok(updatedUser);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
-    }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            try
+            {
+                await sender.Send(new DeleteUserCommand(id));
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while deleting the user: " + ex.Message);
+            }
+        }
+    } 
 }
