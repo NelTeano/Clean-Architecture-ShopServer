@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyServer.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using MyServer.Infrastructure.Data;
 namespace MyServer.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContextDB))]
-    partial class ApplicationContextDBModelSnapshot : ModelSnapshot
+    [Migration("20250804135205_AddNewProductEntities")]
+    partial class AddNewProductEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

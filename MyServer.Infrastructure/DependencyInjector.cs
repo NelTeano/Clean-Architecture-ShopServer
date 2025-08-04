@@ -26,7 +26,6 @@ namespace MyServer.Infrastructure
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             // Register services with interfaces
             services.AddScoped<IPaymentService, StripePaymentService>();
