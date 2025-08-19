@@ -16,24 +16,24 @@ namespace MyServer.Infrastructure.Repositories
 
         public async Task<PaymentEntity> CreateAsync(PaymentEntity payment, CancellationToken cancellationToken = default)
         {
-            _context.Payment.Add(payment);
+            _context.Payments.Add(payment);
             await _context.SaveChangesAsync(cancellationToken);
             return payment;
         }
 
         public async Task<PaymentEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Payment.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            return await _context.Payments.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task<PaymentEntity?> GetByStripeSessionIdAsync(string stripeSessionId, CancellationToken cancellationToken = default)
         {
-            return await _context.Payment.FirstOrDefaultAsync(p => p.StripeSessionId == stripeSessionId, cancellationToken);
+            return await _context.Payments.FirstOrDefaultAsync(p => p.StripeSessionId == stripeSessionId, cancellationToken);
         }
 
         public async Task<PaymentEntity> UpdateAsync(PaymentEntity payment, CancellationToken cancellationToken = default)
         {
-            _context.Payment.Update(payment);
+            _context.Payments.Update(payment);
             await _context.SaveChangesAsync(cancellationToken);
             return payment;
         }

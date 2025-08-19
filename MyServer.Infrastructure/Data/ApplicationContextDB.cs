@@ -1,31 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyServer.Core.Entities;
 using MyServer.Core.Entities.ProductEntities;
-
-
 namespace MyServer.Infrastructure.Data
 {
     public class ApplicationContextDB(DbContextOptions<ApplicationContextDB> options) : DbContext(options)
     {
-        public DbSet<UserEntity> User { get; set; }
-        public DbSet<PaymentEntity> Payment { get; set; }
-
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<PaymentEntity> Payments { get; set; }
         public DbSet<VariantEntity> Variants { get; set; }
         public DbSet<SubVariantEntity> SubVariants { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
-        public DbSet<ProductSizeEntity> ProductItems { get; set; }
-
-        public DbSet<ProductItemEntity> ProductSizes { get; set; }
-
+        public DbSet<ProductItemEntity> ProductItems { get; set; }
+        public DbSet<ProductSizeEntity> ProductSizes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             // PaymentEntity decimal configurations
@@ -71,20 +60,29 @@ namespace MyServer.Infrastructure.Data
             modelBuilder.Entity<ProductSizeEntity>()
                 .HasIndex(ps => ps.ProductItemId);
 
+            // Configure timestamp properties - use this approach if removing property defaults
+            ConfigureTimestampProperties(modelBuilder);
+        }
 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        private void ConfigureTimestampProperties(ModelBuilder modelBuilder)
+        {
+            // Configure CreatedAt to be set only on add
+            var entityTypes = modelBuilder.Model.GetEntityTypes()
+                .Where(t => t.ClrType.GetProperty("CreatedAt") != null);
+
+            foreach (var entityType in entityTypes)
             {
-                var properties = entityType.ClrType.GetProperties()
-                    .Where(p => p.Name == "UpdatedAt");
+                modelBuilder.Entity(entityType.ClrType)
+                    .Property("CreatedAt")
+                    .HasDefaultValueSql("GETUTCDATE()") // SQL Server
+                    .ValueGeneratedOnAdd();
 
-                foreach (var property in properties)
-                {
-                    modelBuilder.Entity(entityType.Name)
-                        .Property(property.Name)
-                        .ValueGeneratedOnAddOrUpdate();
-                }
+                // For other databases, use:
+                // .HasDefaultValueSql("NOW()") // PostgreSQL
+                // .HasDefaultValueSql("datetime('now')") // SQLite
             }
         }
+
         public override int SaveChanges()
         {
             UpdateTimestamps();
@@ -100,17 +98,30 @@ namespace MyServer.Infrastructure.Data
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Modified);
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
             foreach (var entry in entries)
             {
-                if (entry.Entity.GetType().GetProperty("UpdatedAt") != null)
+                var entityType = entry.Entity.GetType();
+                var now = DateTime.UtcNow;
+
+                // Only set CreatedAt for new entities
+                if (entry.State == EntityState.Added)
                 {
-                    entry.Property("UpdatedAt").CurrentValue = DateTime.UtcNow;
+                    var createdAtProperty = entityType.GetProperty("CreatedAt");
+                    if (createdAtProperty != null)
+                    {
+                        entry.Property("CreatedAt").CurrentValue = now;
+                    }
+                }
+
+                // Always set UpdatedAt for both new and modified entities
+                var updatedAtProperty = entityType.GetProperty("UpdatedAt");
+                if (updatedAtProperty != null)
+                {
+                    entry.Property("UpdatedAt").CurrentValue = now;
                 }
             }
         }
-
-
     }
 }

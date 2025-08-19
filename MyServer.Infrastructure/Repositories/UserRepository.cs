@@ -12,7 +12,7 @@ namespace MyServer.Infrastructure.Repositories
         public async Task<UserEntity> GetUserById(Guid id)
         {
             try { 
-                var user = await dbContext.User.FirstOrDefaultAsync(user => user.Id == id);
+                var user = await dbContext.Users.FirstOrDefaultAsync(user => user.Id == id);
 
                 if (user == null)
                 {
@@ -29,7 +29,7 @@ namespace MyServer.Infrastructure.Repositories
         {
             try { 
 
-                var users = await dbContext.User.ToListAsync();
+                var users = await dbContext.Users.ToListAsync();
                 if(users == null || !users.Any())
                 {
                     throw new KeyNotFoundException("No users found.");
@@ -48,7 +48,7 @@ namespace MyServer.Infrastructure.Repositories
 
             try {
                 user.Id = Guid.NewGuid();
-                dbContext.User.Add(user);
+                dbContext.Users.Add(user);
 
                 await dbContext.SaveChangesAsync(cancellationToken);
                 return user;
@@ -64,7 +64,7 @@ namespace MyServer.Infrastructure.Repositories
 
             try
             {
-                var user = await dbContext.User.FirstOrDefaultAsync(u => u.Id == id);
+                var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
 
                 if (user is null)
                 {
@@ -93,12 +93,12 @@ namespace MyServer.Infrastructure.Repositories
         public async Task<UserEntity> DeleteUser(Guid id, CancellationToken cancellationToken)
         {
             try { 
-                var user = await dbContext.User.FirstOrDefaultAsync(x => x.Id == id);
+                var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
                 if (user is null)
                 {
                     throw new KeyNotFoundException($"User with ID {id} not found.");
                 }
-                dbContext.User.Remove(user);
+                dbContext.Users.Remove(user);
                 await dbContext.SaveChangesAsync(cancellationToken);
                 return user;
             }
