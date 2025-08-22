@@ -7,28 +7,29 @@ using System.Threading.Tasks;
 
 namespace MyServer.Application.Models.DTOs
 {
-    public class VariantDTO
-    {
-        public int? Id { get; set; }
-        public string Variant { get; set; } = string.Empty;
-        public List<SubVariantDTO>? SubVariants { get; set; }
-    }
-
-    public class CreateVariantRequest
-    {
-        [Required]
-        [StringLength(255)]
-        public string Variant { get; set; } = string.Empty;
-
-        public List<CreateSubVariantRequest>? SubVariants { get; set; }
-    }
-
-    public class UpdateVariantRequest
+    public class VariantDto
     {
         public int Id { get; set; }
+        public string VariantName { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
 
-        [Required]
-        [StringLength(255)]
-        public string Variant { get; set; } = string.Empty;
+    public class VariantWithSubVariantsDto
+    {
+        public int Id { get; set; }
+        public string VariantName { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public List<SubVariantDto> SubVariants { get; set; } = new();
+    }
+
+    public class SubVariantDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int VariantId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
