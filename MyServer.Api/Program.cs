@@ -1,8 +1,8 @@
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MyServer.Api;
 using System.Security.Claims;
-using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 Env.Load();

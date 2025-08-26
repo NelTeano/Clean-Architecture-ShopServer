@@ -50,9 +50,8 @@ namespace MyServer.Infrastructure.Repositories
         {
             try
             {
-                context.Variants.Add(variant);
-                await context.SaveChangesAsync(token);
-                return variant;
+                var entry = await context.Variants.AddAsync(variant, token);
+                return entry.Entity;
             }
             catch (Exception ex)
             {
@@ -71,8 +70,7 @@ namespace MyServer.Infrastructure.Repositories
                 }
 
                 context.Variants.Remove(variant);
-                await context.SaveChangesAsync(token);
-                return variant;
+                return variant; // no SaveChanges here
             }
             catch (Exception ex)
             {

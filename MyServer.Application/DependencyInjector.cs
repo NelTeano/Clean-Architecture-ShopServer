@@ -1,5 +1,7 @@
 ﻿using MediatR.NotificationPublishers;
 using Microsoft.Extensions.DependencyInjection;
+using MyServer.Application.Mappings;
+using System.Reflection;
 
 
 namespace MyServer.Application
@@ -13,6 +15,12 @@ namespace MyServer.Application
             {
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjector).Assembly);
             });
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<VariantProfile>();
+            });
+
             return services;
         }
     }
