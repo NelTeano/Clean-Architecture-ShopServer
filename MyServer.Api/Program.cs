@@ -2,6 +2,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MyServer.Api;
+using Serilog;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
+// Configure Serilog for logging
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) // read from appsettings.json
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Host.UseSerilog(); // replace default logger
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
@@ -86,6 +94,7 @@ app.UseHttpsRedirection();
 app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSerilogRequestLogging();
 app.MapControllers();
 
 app.Run();
